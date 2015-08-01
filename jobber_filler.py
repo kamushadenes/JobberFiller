@@ -53,18 +53,18 @@ fill_weekends = False
 # Fill holidays? Note that days on exceptional_dates will ALWAYS be filled
 fill_holidays = False
 
-# Fill only exceptional dates
+# Fill only exceptional_dates
 exceptional_only = False
 
 # Add exceptional dates (e.g. dates where you trully want to specify the times) in the following format:
 # 'YYYY/mm/dd': [('CATEGORY', 'NOTES', 'START_TIME', 'END_TIME')]
 
 # On CATEGORY, you just need to specify the first distinguishable part of the string, as in '#9 -', or 'General'
-# Hours need to follow the format HH.MM, as in 9.00
-
-# '2015/07/31': [('#80 -', 'Did something', '6.00', '9.00'), ('#9 -', 'Did something else', '10.00', '13.00')]
+# Hours need to follow the format HH.MM, as in 9.00, or HH only.
 
 # If you add an hour without minutes (e.g. 9), get_deviated_time will be called, using daily_deviation to randomly choose a minute
+
+# '2015/07/31': [('#80 -', 'Did something', '6.00', '9.00'), ('#9 -', 'Did something else', '10.00', '13.00')]
 
 # Just add one per line and you should be ok, you can add more than one entry per day as normal, just dont expect me to check if you are overlapping things
 
@@ -74,6 +74,10 @@ exceptional_dates = {
     '2015/07/06': [('#80 -', 'Did something cool', '9', '12'), ('#77 -', 'Did something boring', '13', '18.23')],
 
 }
+
+
+# Possible values: chrome, phantomjs, firefox (firefox is REALLY slow, don't recommend using it)
+engine = 'chrome'
 
 class JobberFiller(object):
 
@@ -137,27 +141,32 @@ class JobberFiller(object):
         if self.driver != None:
           return self.driver
         else:
-          chromedriver = "/usr/local/bin/chromedriver"
-          os.environ["webdriver.chrome.driver"] = chromedriver
-          driver = webdriver.Chrome(chromedriver)
-          return driver
 
-          '''
-          # Firefox is SLOW AS HELL
-          profile = webdriver.FirefoxProfile()
-          profile.set_preference('browser.download.folderList', 2)
-          profile.set_preference('browser.download.manager.showWhenStarting', False)
-          profile.set_preference('browser.download.dir', '/tmp')
-          profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'img/png')
-          profile.native_events_enabled = False
-          #return webdriver.Firefox(profile)
-          # PhantomJS is OK
-          webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.settings.userAgent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36'
-          webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.Accept-Language'] = 'pt-BR'
-          webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.Connection'] = 'keep-alive'
-          driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any', '--ignore-ssl-errors=yes'])
-          return driver
-          '''
+          if engine == 'chrome':
+            chromedriver = "/usr/local/bin/chromedriver"
+            os.environ["webdriver.chrome.driver"] = chromedriver
+            driver = webdriver.Chrome(chromedriver)
+            return driver
+
+          elif engine == 'firefox'
+            # Firefox is SLOW AS HELL
+            profile = webdriver.FirefoxProfile()
+            profile.set_preference('browser.download.folderList', 2)
+            profile.set_preference('browser.download.manager.showWhenStarting', False)
+            profile.set_preference('browser.download.dir', '/tmp')
+            profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'img/png')
+            profile.native_events_enabled = True
+            return webdriver.Firefox(profile)
+
+          elif engine == 'phantomjs':
+            # PhantomJS is OK
+            webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.settings.userAgent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36'
+            webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.Accept-Language'] = 'pt-BR'
+            webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.Connection'] = 'keep-alive'
+            driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any', '--ignore-ssl-errors=yes'])
+            return driver
+          else:
+            raise Exception('Invalid engine!')
 
     def __init__(self, email, password, first_date, last_date, exceptional_dates, daily_deviation, exceptional_only):
       self.email = email
