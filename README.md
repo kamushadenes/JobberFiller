@@ -21,7 +21,7 @@ selenium: https://pypi.python.org/pypi/selenium
 
 ## Variables
 
-Fill the variables with the correct values:
+Fill the variables with the correct values.
 
 
 ### email
