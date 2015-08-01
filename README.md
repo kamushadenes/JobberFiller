@@ -12,7 +12,17 @@ The sole purpose of this program is to aid in the slow, time consuming task of f
 
 # Usage
 
-First of all, fill the variables with the correct values:
+## Dependencies
+
+workalendar: https://pypi.python.org/pypi/workalendar/0.1
+
+selenium: https://pypi.python.org/pypi/selenium
+
+
+## Variables
+
+Fill the variables with the correct values:
+
 
 ### email
 Holds your email address, used to login to Jobber.
@@ -67,7 +77,13 @@ Just add one per line and you should be ok, you can add more than one entry per 
 The engine/driver that Selenium should use. I recommend either 'chrome' of 'phantomjs'. 'firefox' is REALLY, *REALLY* slow.
 
 For Chrome, note that besides Chrome itself you also need chromedriver: https://code.google.com/p/selenium/wiki/ChromeDriver
+
 For PhantomJS, check http://phantomjs.org/
+
+## Running
+
+To run the program, simply call python jobber_filler.py, after filling up all the variables.
+
 
 
 
